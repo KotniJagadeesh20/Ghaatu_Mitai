@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, createContext, useContext, useEffect } from 'react';
-import Link from 'next/link';
+import type { ComponentProps } from 'react';
+import NextLink from 'next/link';
 
 import {
   ArrowRight,
@@ -57,10 +58,26 @@ import { Toaster, toast } from 'sonner';
    GitHub Pages
    ========================================================= */
 
-const BASE_PATH = '/Ghaatu_Mitai';
+const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 function asset(path: string) {
   return `${BASE_PATH}${path}`;
+}
+
+function route(path: string) {
+  return `${BASE_PATH}${path}` || '/';
+}
+
+function Link({
+  href,
+  ...props
+}: ComponentProps<typeof NextLink>) {
+  return (
+    <NextLink
+      {...props}
+      href={typeof href === 'string' ? route(href) : href}
+    />
+  );
 }
 
 
@@ -131,7 +148,7 @@ function Art({
   className = '',
 }: {
   source: string;
-  box: number[];
+  box: readonly number[];
   alt: string;
   className?: string;
 }) {
@@ -780,22 +797,17 @@ export default function Storefront({
       ],
     ] as const;
 
-    const wholesaleBenefits = [
-      [
-        Store,
-        'For supermarkets',
-        'Ready-to-display packaged products.',
-      ],
-      [
-        ShoppingCart,
-        'For retailers',
-        'Flexible quantities and wholesale pricing.',
-      ],
-      [
-        Truck,
-        'For distributors',
-        'Talk to us about becoming a distribution partner.',
-      ],
+    const wholesaleHeroBenefits = [
+      [Leaf, 'Authentic Flavours'],
+      [ShieldCheck, 'Consistent Quality'],
+      [Truck, 'Reliable Supply'],
+      [Coins, 'Competitive Wholesale Pricing'],
+    ] as const;
+
+    const wholesalePartners = [
+      ['For Supermarkets', 'Ready-to-display packaged products with strong shelf appeal.', ['Wide product range', 'Attractive packaging', 'Steady supply', 'Marketing support'], [0, 730, 320, 310]],
+      ['For Retailers', 'Flexible quantities and wholesale pricing.', ['Low minimum order quantity', 'Best-in-class pricing', 'Regular supply', 'Fast and reliable delivery'], [320, 730, 320, 310]],
+      ['For Distributors', 'Talk to us about becoming a distribution partner.', ['Pan India supply', 'Exclusive distribution support', 'Growing demand', 'Long-term partnership'], [640, 730, 384, 310]],
     ] as const;
 
     const perfectFor = [
@@ -808,7 +820,8 @@ export default function Storefront({
 
     if (wholesale) {
       return (
-        <section className="business-showcase wholesale-showcase">
+        <>
+          <section className="business-showcase wholesale-showcase">
           <div className="showcase-copy">
             <p className="eyebrow">
               Wholesale
@@ -831,13 +844,12 @@ export default function Storefront({
               will come back for.
             </p>
 
-            <div className="partner-cards">
-              {wholesaleBenefits.map(
-                ([Icon, title, desc]) => (
+            <div className="wholesale-hero-benefits">
+              {wholesaleHeroBenefits.map(
+                ([Icon, title]) => (
                   <article key={title}>
-                    <Icon />
-                    <h3>{title}</h3>
-                    <p>{desc}</p>
+                    <span><Icon /></span>
+                    <strong>{title}</strong>
                   </article>
                 )
               )}
@@ -876,7 +888,27 @@ export default function Storefront({
             box={[482, 726, 542, 517]}
             alt="Ghaatu Mitai packaged sweets and savouries displayed in a neighbourhood store"
           />
-        </section>
+          </section>
+
+          <section className="partner-cards wholesale-partner-strip">
+          {wholesalePartners.map(
+            ([title, desc, bullets, box]) => (
+              <article key={title}>
+                <Art source="business" box={box} alt="" />
+                <div>
+                  <h3>{title}</h3>
+                  <p>{desc}</p>
+                  <ul>
+                    {bullets.map((bullet) => (
+                      <li key={bullet}>{bullet}</li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+            )
+          )}
+          </section>
+        </>
       );
     }
 
@@ -1036,6 +1068,175 @@ export default function Storefront({
           )}
         </div>
       </section>
+    );
+  }
+
+
+  function wholesalePage() {
+    const range = [
+      ['Sweets', [539, 165, 237, 221]],
+      ['Savouries', [28, 165, 239, 221]],
+      ['Mixtures', [284, 165, 238, 221]],
+      ['Chips', [794, 165, 236, 221]],
+      ['Combos', [28, 791, 305, 178]],
+      ['Gift Boxes', [349, 791, 303, 178]],
+    ] as const;
+
+    return (
+      <>
+        {business(true)}
+        <section className="wholesale-range section">
+          <div className="wholesale-section-heading">
+            <p className="eyebrow">Made for modern shelves</p>
+            <h2>Our Product Range</h2>
+            <p>Traditional favourites, packaged for your customers.</p>
+          </div>
+
+          <div className="wholesale-range-grid">
+            {range.map(([title, box]) => (
+              <div key={title}>
+                <Art source="shop" box={box} alt={title} />
+                <strong>{title}</strong>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {wholesaleReasons()}
+
+        <section className="wholesale-details section">
+          <div className="wholesale-testimonials">
+            <div className="wholesale-section-heading">
+              <p className="eyebrow">What our partners say</p>
+              <h2>Trusted by retailers</h2>
+            </div>
+            <div className="wholesale-review-grid">
+              {[
+                ['Reliable supply, authentic taste and professional service. Highly recommended for retailers.', 'Anjali M.', 'Retail Store Owner, Bangalore', 1],
+                ['Ghaatu Mitai products have been a great addition to our store. Excellent quality and our customers love them!', 'Suresh R.', 'Supermarket Owner, Hyderabad', 2],
+              ].map(([quote, name, role, id]) => (
+                <article key={name}>
+                  <p>“{quote}”</p>
+                  <span className="review-stars">★★★★★</span>
+                  <div className="review-person">
+                    <Art source="community" box={[64 + Number(id) * 182, 365, 43, 43]} alt="" />
+                    <span><strong>{name}</strong><small>{role}</small></span>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div className="wholesale-enquiry">
+            <p className="eyebrow">Start a conversation</p>
+            <h2>Enquire About Wholesale</h2>
+            <p>Tell us about your business and we’ll get back to you shortly.</p>
+            <form onSubmit={(event) => { event.preventDefault(); setEnquiry('Wholesale enquiry'); }}>
+              <input className="form-input" name="business" placeholder="Business name" required />
+              <input className="form-input" name="city" placeholder="City" required />
+              <input className="form-input" name="name" placeholder="Your name" required />
+              <input className="form-input" name="phone" placeholder="Phone number" required />
+              <input className="form-input" name="email" type="email" placeholder="Email address" required />
+              <textarea className="form-input" name="message" placeholder="Tell us more about your requirements..." rows={3} />
+              <button className="btn" type="submit">Submit Enquiry <ArrowRight size={17} /></button>
+            </form>
+            <small>Or talk to us directly on WhatsApp</small>
+          </div>
+        </section>
+
+        <section className="wholesale-trusted section">
+          <p className="eyebrow">Trusted by stores across India</p>
+          <div><strong>DMart</strong><strong>spencer’s</strong><strong>RelianceFresh</strong><strong>more</strong><strong>Nature’s Basket</strong><strong>bigbasket</strong></div>
+        </section>
+
+        <section className="wholesale-cta">
+          <div><h2>Partner with Ghaatu Mitai</h2><p>Authentic. Trusted. Growing together.</p></div>
+          <button className="btn light" onClick={() => setEnquiry('Wholesale catalogue')}>Download Catalogue <Download size={17} /></button>
+          <button className="btn light-outline" onClick={() => setEnquiry('Retail partnership')}>Become a Retail Partner <ArrowRight size={17} /></button>
+        </section>
+      </>
+    );
+  }
+
+  function bulkOrdersPage() {
+    const celebrationProducts = [
+      ['Boondi Laddu', [28, 165, 239, 221]],
+      ['Kaju Katli', [539, 165, 237, 221]],
+      ['Ghaatu Mixture', [284, 165, 238, 221]],
+      ['Jantikalu', [794, 165, 236, 221]],
+      ['Arati Chips', [984, 791, 302, 178]],
+      ['Ribbon Pakoda', [669, 791, 300, 178]],
+      ['Assorted Sweet Boxes', [349, 791, 303, 178]],
+      ['Custom Gift Hampers', [349, 791, 303, 178]],
+    ] as const;
+
+    const occasions = [
+      [Users, 'Weddings'],
+      [Gift, 'Engagements'],
+      [Users, 'Family Functions'],
+      [Leaf, 'Festivals'],
+      [Building2, 'Corporate Events'],
+      [Gift, 'Return Gifts'],
+    ] as const;
+
+    return (
+      <>
+        {business()}
+
+        <section className="bulk-order-content">
+          <div className="bulk-products">
+            <p className="eyebrow">Made for sharing</p>
+            <h2>Popular for Celebrations</h2>
+            <p>A few favourites for your special occasions.</p>
+            <div className="bulk-product-grid">
+              {celebrationProducts.map(([title, box]) => (
+                <article key={title}>
+                  <Art source="shop" box={box} alt={title} />
+                  <strong>{title}</strong>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div className="bulk-quote-form">
+            <p className="eyebrow">Plan your celebration</p>
+            <h2>Request a Quote</h2>
+            <p>Tell us about your requirement and we’ll get back to you with the best options.</p>
+            <form onSubmit={(event) => { event.preventDefault(); setEnquiry('Celebration quote'); }}>
+              <input required placeholder="Full name" aria-label="Full name" />
+              <input required placeholder="Phone number" aria-label="Phone number" />
+              <input type="email" required placeholder="Email (Optional)" aria-label="Email" />
+              <select required defaultValue="" aria-label="Event type"><option value="" disabled>Event type</option><option>Wedding</option><option>Corporate event</option><option>Family function</option></select>
+              <input placeholder="Expected date" aria-label="Expected date" />
+              <select required defaultValue="" aria-label="Approximate quantity"><option value="" disabled>Approximate quantity</option><option>50-100 guests</option><option>100-300 guests</option><option>300+ guests</option></select>
+              <textarea placeholder="Tell us more about your requirements..." aria-label="Message" rows={3} />
+              <button className="btn" type="submit">Request a Quote <ArrowRight size={17} /></button>
+            </form>
+            <span className="bulk-whatsapp"><MessageCircle size={15} /> Or talk to us on WhatsApp</span>
+          </div>
+        </section>
+
+        <section className="bulk-occasions">
+          <h2>Perfect for Every Occasion</h2>
+          <div>{occasions.map(([Icon, title]) => <article key={title}><Icon /><span>{title}</span></article>)}</div>
+        </section>
+
+        <section className="bulk-gift-banner">
+          <Art source="business" box={[490, 0, 534, 300]} alt="Custom Ghaatu Mitai gift boxes" />
+          <div><h2>Custom Gift Boxes</h2><p>Beautifully packed and customised for your occasion.<br />Add a traditional touch to your celebrations.</p><button className="btn light" onClick={() => setEnquiry('Custom gift boxes')}>Explore Gift Boxes <ArrowRight size={17} /></button></div>
+        </section>
+
+        <section className="bulk-bottom">
+          <div className="bulk-testimonials">
+            <p className="eyebrow">What our customers say</p>
+            <div>{[
+              ['The sweets were fresh, delicious and beautifully packed. Our wedding guests loved them!', 'Priya S.', 'Hyderabad', 1],
+              ['Ghaatu Mitai handled our large order perfectly. Great quality, on-time delivery and excellent service.', 'Ramesh K.', 'Bangalore', 2],
+            ].map(([quote, name, city, id]) => <article key={name}><p>“{quote}”</p><span className="review-stars">★★★★★</span><div className="review-person"><Art source="community" box={[64 + Number(id) * 182, 365, 43, 43]} alt="" /><span><strong>{name}</strong><small>{city}</small></span></div></article>)}</div>
+          </div>
+          <div className="bulk-enquiry-card"><p className="eyebrow">Let’s make your celebration sweeter</p><h2>Let’s Make Your Celebration Sweeter</h2><p>Get in touch with us for custom orders, bulk pricing and special requests.</p><button className="btn" onClick={() => setEnquiry('Celebration quote')}>Request a Quote <ArrowRight size={17} /></button><button className="btn outline" onClick={() => setEnquiry('WhatsApp bulk order')}><MessageCircle size={17} /> Talk on WhatsApp</button></div>
+        </section>
+      </>
     );
   }
 
@@ -1819,49 +2020,11 @@ export default function Storefront({
         )}
 
         {page === 'bulk-orders' && (
-          <>
-            {business()}
-
-            <section className="section">
-              <Title title="A Sweet Part of Your Celebration" />
-
-              <div className="occasion-tags">
-                {[
-                  'Weddings',
-                  'Engagements',
-                  'Family functions',
-                  'Festivals',
-                  'Corporate events',
-                ].map((title) => (
-                  <span key={title}>
-                    {title}
-                  </span>
-                ))}
-              </div>
-            </section>
-
-            {benefits()}
-          </>
+          bulkOrdersPage()
         )}
 
         {page === 'wholesale' && (
-          <>
-            {business(true)}
-            {wholesaleReasons()}
-
-            <div className="wholesale-quote">
-              “Traditional flavours travel
-              far, and always find a home.”
-
-              <span>
-                — <Leaf /> —
-              </span>
-
-              <small>
-                GHAATU MITAI
-              </small>
-            </div>
-          </>
+          wholesalePage()
         )}
 
         {page === 'contact' && (

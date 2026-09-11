@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
-import "./brand-fonts.css";
 import "./globals.css";
 import { ShoppingProvider } from "./storefront";
+
+const basePath = import.meta.env.BASE_URL;
+const fontStyles = `
+@font-face{font-family:'Caveat';font-style:normal;font-weight:500;font-display:swap;src:url(${basePath}fonts/brand-0.ttf) format('truetype')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:400;font-display:swap;src:url(${basePath}fonts/brand-1.ttf) format('truetype')}
+@font-face{font-family:'DM Sans';font-style:normal;font-weight:600;font-display:swap;src:url(${basePath}fonts/brand-2.ttf) format('truetype')}
+@font-face{font-family:'DM Serif Display';font-style:normal;font-weight:400;font-display:swap;src:url(${basePath}fonts/brand-3.ttf) format('truetype')}
+`;
 
 export const metadata: Metadata = {
   title: "Ghaatu Mitai | Traditional Sweets & Snacks",
@@ -11,8 +18,8 @@ export const metadata: Metadata = {
     "codex-preview": "development",
   },
   icons: {
-    icon: "/Ghaatu_Mitai/favicon.svg",
-    shortcut: "/Ghaatu_Mitai/favicon.svg",
+    icon: `${basePath}favicon.svg`,
+    shortcut: `${basePath}favicon.svg`,
   },
 };
 
@@ -23,6 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <style dangerouslySetInnerHTML={{ __html: fontStyles }} />
+      </head>
       <body className="antialiased">
         <ShoppingProvider>{children}</ShoppingProvider>
       </body>

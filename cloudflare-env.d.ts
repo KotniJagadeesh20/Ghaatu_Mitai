@@ -4,3 +4,11 @@ declare namespace Cloudflare {
     BUCKET?: R2Bucket;
   }
 }
+
+interface ImportMetaEnv {
+  readonly BASE_URL: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}

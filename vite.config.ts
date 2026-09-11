@@ -12,6 +12,7 @@ const { d1, r2 } = hostingConfig;
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 const managedLinux = readExecutionProfile() === "managed-linux";
+const isGithubPages = process.env.GITHUB_PAGES === "true";
 
 const localBindingConfig = {
   main: "vinext/server/fetch-handler",
@@ -51,9 +52,8 @@ export default defineConfig(async () => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
-    // GitHub Pages serves this project below the repository name. Without a
-    // Vite base, exported pages request their CSS and JavaScript from `/`.
-    base: "/Ghaatu_Mitai/",
+    // GitHub Pages serves this project below the repository name.
+    base: isGithubPages ? "/Ghaatu_Mitai/" : "/",
     server: {
       host: "0.0.0.0",
       ...(managedLinux ? { allowedHosts: ["terminal.local"] } : {}),
