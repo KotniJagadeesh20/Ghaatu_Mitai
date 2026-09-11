@@ -51,6 +51,9 @@ export default defineConfig(async () => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
+    // GitHub Pages serves this project below the repository name. Without a
+    // Vite base, exported pages request their CSS and JavaScript from `/`.
+    base: "/Ghaatu_Mitai/",
     server: {
       host: "0.0.0.0",
       ...(managedLinux ? { allowedHosts: ["terminal.local"] } : {}),
