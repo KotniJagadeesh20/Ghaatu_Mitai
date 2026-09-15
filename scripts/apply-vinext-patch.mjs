@@ -14,6 +14,7 @@ if (packageJson.version !== expectedVersion) {
 }
 
 let source = await readFile(prerenderPath, "utf8");
+
 const replacements = [
   {
     originals: [
@@ -34,21 +35,29 @@ const replacements = [
 ];
 
 let changed = false;
+
 for (const { originals, patched } of replacements) {
   if (source.includes(patched)) continue;
+
   const original = originals.find((candidate) => source.includes(candidate));
+
   if (!original) {
     throw new Error(
       `Unable to patch ${prerenderPath}: expected vinext source was not found.`,
     );
   }
+
   source = source.replace(original, patched);
   changed = true;
 }
 
 if (changed) {
   await writeFile(prerenderPath, source);
-  console.log(`Patched vinext ${expectedVersion} prerender requests for basePath.`);
+  console.log(
+    `Patched vinext ${expectedVersion} prerender requests for basePath.`,
+  );
 } else {
-  console.log(`vinext ${expectedVersion} basePath prerender patch is already applied.`);
+  console.log(
+    `vinext ${expectedVersion} basePath prerender patch is already applied.`,
+  );
 }
