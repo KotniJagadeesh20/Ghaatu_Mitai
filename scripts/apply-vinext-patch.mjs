@@ -14,22 +14,23 @@ if (packageJson.version !== expectedVersion) {
 }
 
 let source = await readFile(prerenderPath, "utf8");
+
 const replacements = [
   {
     originals: [
-      "const htmlRequest = new Request(`http://localhost${urlPath}`, { headers: htmlHeaders });",
-      "const htmlRequest = new Request(`http://localhost${config.basePath ?? ""}${urlPath}`, { headers: htmlHeaders });",
+      'const htmlRequest = new Request(`http://localhost${urlPath}`, { headers: htmlHeaders });',
+      'const htmlRequest = new Request(`http://localhost${config.basePath ?? ""}${urlPath}`, { headers: htmlHeaders });',
     ],
     patched:
-      "const htmlRequest = new Request(`http://localhost${config.basePath ?? ""}${urlPath}${config.trailingSlash && urlPath !== "/" ? "/" : ""}`, { headers: htmlHeaders });",
+      'const htmlRequest = new Request(`http://localhost${config.basePath ?? ""}${urlPath}${config.trailingSlash && urlPath !== "/" ? "/" : ""}`, { headers: htmlHeaders });',
   },
   {
     originals: [
-      "const rscRequest = new Request(`http://localhost${urlPath}`, { headers: rscHeaders });",
-      "const rscRequest = new Request(`http://localhost${config.basePath ?? ""}${urlPath}`, { headers: rscHeaders });",
+      'const rscRequest = new Request(`http://localhost${urlPath}`, { headers: rscHeaders });',
+      'const rscRequest = new Request(`http://localhost${config.basePath ?? ""}${urlPath}`, { headers: rscHeaders });',
     ],
     patched:
-      "const rscRequest = new Request(`http://localhost${config.basePath ?? ""}${urlPath}${config.trailingSlash && urlPath !== "/" ? "/" : ""}`, { headers: rscHeaders });",
+      'const rscRequest = new Request(`http://localhost${config.basePath ?? ""}${urlPath}${config.trailingSlash && urlPath !== "/" ? "/" : ""}`, { headers: rscHeaders });',
   },
 ];
 
@@ -52,7 +53,11 @@ for (const { originals, patched } of replacements) {
 
 if (changed) {
   await writeFile(prerenderPath, source);
-  console.log(`Patched vinext ${expectedVersion} prerender requests for basePath.`);
+  console.log(
+    `Patched vinext ${expectedVersion} prerender requests for basePath.`,
+  );
 } else {
-  console.log(`vinext ${expectedVersion} basePath prerender patch is already applied.`);
+  console.log(
+    `vinext ${expectedVersion} basePath prerender patch is already applied.`,
+  );
 }
