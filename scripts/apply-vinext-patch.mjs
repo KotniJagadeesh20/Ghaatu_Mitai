@@ -18,30 +18,34 @@ const replacements = [
   {
     originals: [
       "const htmlRequest = new Request(`http://localhost${urlPath}`, { headers: htmlHeaders });",
-      "const htmlRequest = new Request(`http://localhost${config.basePath ?? \"\"}${urlPath}`, { headers: htmlHeaders });",
+      "const htmlRequest = new Request(`http://localhost${config.basePath ?? ""}${urlPath}`, { headers: htmlHeaders });",
     ],
     patched:
-      "const htmlRequest = new Request(`http://localhost${config.basePath ?? \"\"}${urlPath}${config.trailingSlash && urlPath !== \"/\" ? \"/\" : \"\"}`, { headers: htmlHeaders });",
+      "const htmlRequest = new Request(`http://localhost${config.basePath ?? ""}${urlPath}${config.trailingSlash && urlPath !== "/" ? "/" : ""}`, { headers: htmlHeaders });",
   },
   {
     originals: [
       "const rscRequest = new Request(`http://localhost${urlPath}`, { headers: rscHeaders });",
-      "const rscRequest = new Request(`http://localhost${config.basePath ?? \"\"}${urlPath}`, { headers: rscHeaders });",
+      "const rscRequest = new Request(`http://localhost${config.basePath ?? ""}${urlPath}`, { headers: rscHeaders });",
     ],
     patched:
-      "const rscRequest = new Request(`http://localhost${config.basePath ?? \"\"}${urlPath}${config.trailingSlash && urlPath !== \"/\" ? \"/\" : \"\"}`, { headers: rscHeaders });",
+      "const rscRequest = new Request(`http://localhost${config.basePath ?? ""}${urlPath}${config.trailingSlash && urlPath !== "/" ? "/" : ""}`, { headers: rscHeaders });",
   },
 ];
 
 let changed = false;
+
 for (const { originals, patched } of replacements) {
   if (source.includes(patched)) continue;
+
   const original = originals.find((candidate) => source.includes(candidate));
+
   if (!original) {
     throw new Error(
       `Unable to patch ${prerenderPath}: expected vinext source was not found.`,
     );
   }
+
   source = source.replace(original, patched);
   changed = true;
 }
