@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
+const isGithubPagesBuild = process.env.GITHUB_PAGES === "true";
+
 const nextConfig: NextConfig = {
-  output: "export"
+  output: "export",
+  basePath: isGithubPagesBuild ? "/Ghaatu_Mitai" : "",
 };
 
 export default nextConfig;
