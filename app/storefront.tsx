@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, createContext, useContext, useEffect } from 'react';
-import type { ComponentProps } from 'react';
-import NextLink from 'next/link';
+import Link from 'next/link';
 
 import {
   ArrowRight,
@@ -63,23 +62,6 @@ const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, '');
 function asset(path: string) {
   return `${BASE_PATH}${path}`;
 }
-
-function route(path: string) {
-  return `${BASE_PATH}${path}` || '/';
-}
-
-function Link({
-  href,
-  ...props
-}: ComponentProps<typeof NextLink>) {
-  return (
-    <NextLink
-      {...props}
-      href={typeof href === 'string' ? route(href) : href}
-    />
-  );
-}
-
 
 /* =========================================================
    Shopping Context
