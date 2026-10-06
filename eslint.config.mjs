@@ -7,6 +7,10 @@ const eslintConfig = defineConfig([
   ...nextTs,
   // Override default ignores of eslint-config-next.
   globalIgnores([
+    // Generated build output (legacy, plain Vite) and TS incremental cache:
+    "dist/**",
+    "dist-vite/**",
+    "tsconfig.tsbuildinfo",
     // Default ignores of eslint-config-next:
     ".next/**",
     "out/**",

@@ -44,3 +44,7 @@ next-env.d.ts
 /.codex/
 /outputs/
 /work/
+
+# Plain React + Vite build output and TypeScript incremental cache
+dist-vite/
+tsconfig.tsbuildinfo

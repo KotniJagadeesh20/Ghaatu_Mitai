@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { teluguFontFaces } from "../src/i18n/fonts";
 import { ShoppingProvider } from "./storefront";
+import { LanguageProvider } from "../src/i18n";
 
 const basePath = import.meta.env.BASE_URL;
 const fontStyles = `
@@ -8,7 +10,7 @@ const fontStyles = `
 @font-face{font-family:'DM Sans';font-style:normal;font-weight:400;font-display:swap;src:url(${basePath}fonts/brand-1.ttf) format('truetype')}
 @font-face{font-family:'DM Sans';font-style:normal;font-weight:600;font-display:swap;src:url(${basePath}fonts/brand-2.ttf) format('truetype')}
 @font-face{font-family:'DM Serif Display';font-style:normal;font-weight:400;font-display:swap;src:url(${basePath}fonts/brand-3.ttf) format('truetype')}
-`;
+${teluguFontFaces(basePath)}`;
 
 export const metadata: Metadata = {
   title: "Ghaatu Mitai | Traditional Sweets & Snacks",
@@ -29,12 +31,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    // LanguageProvider updates `lang` after mount for Telugu visitors.
+    <html lang="en" suppressHydrationWarning>
       <head>
         <style dangerouslySetInnerHTML={{ __html: fontStyles }} />
       </head>
       <body className="antialiased">
-        <ShoppingProvider>{children}</ShoppingProvider>
+        <LanguageProvider>
+          <ShoppingProvider>{children}</ShoppingProvider>
+        </LanguageProvider>
       </body>
     </html>
   );
