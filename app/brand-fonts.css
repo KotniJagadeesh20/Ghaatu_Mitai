@@ -29,3 +29,10 @@
   font-display: swap;
   src: url(/fonts/brand-3.ttf) format('truetype');
 }
+
+/* Telugu glyphs for the brand families (Noto Sans/Serif Telugu, OFL).
+   Must stay AFTER the rules above - see src/i18n/fonts.ts. */
+@font-face { font-family: 'DM Sans'; font-style: normal; font-weight: 400; font-display: swap; src: url(/fonts/te-sans-400.woff2) format('woff2'); unicode-range: U+0951-0952,U+0964-0965,U+0C00-0C7F,U+1CDA,U+1CF2,U+200C-200D,U+25CC; }
+@font-face { font-family: 'DM Sans'; font-style: normal; font-weight: 600; font-display: swap; src: url(/fonts/te-sans-600.woff2) format('woff2'); unicode-range: U+0951-0952,U+0964-0965,U+0C00-0C7F,U+1CDA,U+1CF2,U+200C-200D,U+25CC; }
+@font-face { font-family: 'DM Serif Display'; font-style: normal; font-weight: 400; font-display: swap; src: url(/fonts/te-serif-400.woff2) format('woff2'); unicode-range: U+0951-0952,U+0964-0965,U+0C00-0C7F,U+1CDA,U+1CF2,U+200C-200D,U+25CC; }
+@font-face { font-family: 'Caveat'; font-style: normal; font-weight: 500; font-display: swap; src: url(/fonts/te-sans-500.woff2) format('woff2'); unicode-range: U+0951-0952,U+0964-0965,U+0C00-0C7F,U+1CDA,U+1CF2,U+200C-200D,U+25CC; }
